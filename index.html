@@ -118,7 +118,11 @@
   .yes { background: var(--hot); color: #fff; left: 50%; translate: calc(-100% - 10px) 0; box-shadow: 0 5px 0 var(--wine); transform: scale(var(--s, 1)); transform-origin: center; z-index: 2; }
   .yes:active { box-shadow: 0 1px 0 var(--wine); translate: calc(-100% - 10px) 4px; }
   .no { background: var(--cream); left: calc(50% + 10px); }
-  .answered .choices { display: none; }
+  .answered .choices, .answered .confirm { display: none; }
+  .confirm { margin-top: 30px; animation: pop .6s cubic-bezier(.3,1.5,.5,1) both; }
+  .confirm-q { font-family: var(--hand); font-size: 2.6rem; line-height: 1; color: var(--roof); }
+  .confirm-btns { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-top: 22px; }
+  .confirm .btn { position: static; translate: none; }
   .answer { display: none; font-family: var(--hand); font-size: 2rem; line-height: 1.15; margin-top: 22px; color: var(--roof); }
   .answered .answer { display: block; animation: rise .8s both; }
   .letter { margin: 26px auto 0; padding: 26px 24px; background: var(--cream); border: 2px solid var(--wine); border-radius: 22px; box-shadow: 0 6px 0 var(--wine); text-align: left; font-size: 1.6rem; line-height: 1.25; color: var(--wine); rotate: -1deg; display: grid; gap: 16px; }
@@ -267,8 +271,15 @@
       <button class="btn yes" id="yes">Sí, quiero</button>
       <button class="btn no" id="no">No</button>
     </div>
+    <div class="confirm" id="confirm" hidden>
+      <p class="confirm-q">¿Segura? jeje</p>
+      <div class="confirm-btns">
+        <button class="btn yes" id="changed">Era broma, sí quiero</button>
+        <button class="btn no" id="sure">Segura</button>
+      </div>
+    </div>
     <div class="answer" role="status">
-      <p class="answer-title">¡Sabía que dirías que sí!</p>
+      <p class="answer-title" id="answerTitle">¡Sabía que dirías que sí!</p>
       <div class="letter">
         <p>Sé que no suelo ser tan detallista, y que el precio o costo de las cosas no era el problema.</p>
         <p>Pero cuando amas a alguien, trabajas y te esfuerzas por ello, haces sacrificios, porque amor con amor se paga.</p>
@@ -384,20 +395,31 @@
   // la pregunta
   const ask = document.getElementById('pregunta'), gift = document.getElementById('regalo');
   const yes = document.getElementById('yes'), no = document.getElementById('no'), box = document.getElementById('choices');
-  const excuses = ['¿Segura?', 'Piénsalo bien', 'Ándale…', 'Este botón no sirve', 'Casi, casi', 'Mejor el rosa', 'Nop'];
+  const excuses = ['Piénsalo bien', 'Ándale…', 'Última oportunidad'];
+  const confirmBox = document.getElementById('confirm');
   let dodges = 0;
-  function dodge(e) {
-    if (e) e.preventDefault();
-    const bw = box.clientWidth, bh = box.clientHeight;
-    no.style.left = rand(0, Math.max(0, bw - no.offsetWidth)) + 'px';
-    no.style.top = rand(70, Math.max(70, bh - no.offsetHeight)) + 'px';
-    no.textContent = excuses[dodges % excuses.length];
+  function dodge() {
+    const maxX = Math.max(0, box.clientWidth - no.offsetWidth), maxY = Math.max(70, box.clientHeight - no.offsetHeight);
+    const cx = no.offsetLeft, cy = no.offsetTop;
+    let x, y, tries = 0;
+    do { x = rand(0, maxX); y = rand(70, maxY); tries++; }
+    while (Math.hypot(x - cx, y - cy) < 110 && tries < 40);
+    no.style.left = x + 'px';
+    no.style.top = y + 'px';
+    no.textContent = excuses[dodges];
     dodges++;
-    yes.style.setProperty('--s', Math.min(1 + dodges * .1, 1.6));
+    yes.style.setProperty('--s', 1 + dodges * .1);
   }
-  no.addEventListener('pointerenter', dodge);
-  no.addEventListener('pointerdown', dodge);
-  no.addEventListener('click', dodge);
+  no.addEventListener('click', () => {
+    if (dodges < 3) return dodge();
+    box.hidden = true;
+    confirmBox.hidden = false;
+  });
+  document.getElementById('changed').addEventListener('click', () => sayYes());
+  document.getElementById('sure').addEventListener('click', () => {
+    document.getElementById('answerTitle').textContent = 'Bueno… igual esto es tuyo, jeje.';
+    sayYes();
+  });
 
   function sayYes(scroll = true) {
     ask.classList.add('answered');
