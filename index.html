@@ -110,6 +110,18 @@
   .back p { font-family: var(--hand); font-size: 1.9rem; line-height: 34px; color: var(--wine); }
   .hint { text-align: center; font-family: var(--hand); font-size: 1.35rem; margin-top: 30px; color: var(--roof); }
 
+  /* ---------- contador ---------- */
+  .since { text-align: center; padding-top: 90px; }
+  .since .eyebrow { display: block; margin-bottom: 18px; font-size: .7rem; letter-spacing: .2em; }
+  .counter { margin-top: 34px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .unit { background: var(--cream); border: 2px solid var(--wine); border-radius: 20px; box-shadow: 0 5px 0 var(--wine); padding: 16px 6px 12px; display: grid; gap: 4px; }
+  .unit b { font-family: var(--display); font-variation-settings: "SOFT" 100, "opsz" 144; font-weight: 700; font-size: 2.3rem; line-height: 1; font-variant-numeric: tabular-nums; }
+  .unit span { font-size: .68rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--roof); }
+  .unit.big { grid-column: 1 / -1; background: var(--hot); color: #fff; padding: 22px 6px 16px; }
+  .unit.big b { font-size: clamp(4.5rem, 24vw, 6.5rem); font-style: italic; letter-spacing: -.03em; }
+  .unit.big span { color: #fff; font-size: .8rem; }
+  .since-note { font-family: var(--hand); font-size: 1.6rem; color: var(--roof); margin-top: 22px; }
+
   /* ---------- la pregunta ---------- */
   .ask { text-align: center; padding: 90px 0 100px; }
   .ask .eyebrow { display: block; margin-bottom: 20px; }
@@ -266,6 +278,18 @@
     </div>
   </section>
 
+  <section class="since wrap">
+    <span class="eyebrow reveal">13 de julio de 2026 · 9:00 am, más o menos</span>
+    <h2 class="reveal">Desde la primera vez<br><em>que te vi</em></h2>
+    <div class="counter reveal" id="counter" role="timer" aria-label="Tiempo desde que nos conocimos">
+      <div class="unit big"><b id="cd">0</b><span>días</span></div>
+      <div class="unit"><b id="ch">00</b><span>horas</span></div>
+      <div class="unit"><b id="cm">00</b><span>minutos</span></div>
+      <div class="unit"><b id="cs">00</b><span>segundos</span></div>
+    </div>
+    <p class="since-note reveal">y contando…</p>
+  </section>
+
   <section class="ask wrap" id="pregunta">
     <span class="eyebrow reveal">Ahora sí, lo importante</span>
     <h2 class="reveal">¿Quieres ser mi novia?</h2>
@@ -378,6 +402,19 @@
   // aparecer al hacer scroll
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .15 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // contador desde que nos conocimos (hora del centro de México)
+  const MET = new Date('2026-07-13T09:00:00-06:00').getTime();
+  const pad = n => String(n).padStart(2, '0');
+  const cd = document.getElementById('cd'), ch = document.getElementById('ch'), cm = document.getElementById('cm'), cs = document.getElementById('cs');
+  function tick() {
+    const t = Math.max(0, Math.floor((Date.now() - MET) / 1000));
+    cd.textContent = Math.floor(t / 86400);
+    ch.textContent = pad(Math.floor(t / 3600) % 24);
+    cm.textContent = pad(Math.floor(t / 60) % 60);
+    cs.textContent = pad(t % 60);
+  }
+  tick(); setInterval(tick, 1000);
 
   // polaroids
   document.querySelectorAll('.polaroid').forEach(p => p.addEventListener('click', () => p.classList.toggle('flip')));
