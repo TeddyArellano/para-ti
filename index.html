@@ -73,6 +73,7 @@
   .hero h1 span { display: block; animation: rise 1.1s cubic-bezier(.2,.8,.2,1) both; }
   .hero h1 span:nth-child(2) { animation-delay: .18s; color: var(--hot); }
   .hero p { font-size: 1.08rem; max-width: 22ch; margin-inline: auto; animation: rise 1.1s .45s cubic-bezier(.2,.8,.2,1) both; }
+  .hero p.wink { font-family: var(--hand); font-size: 1.45rem; line-height: 1.1; color: var(--roof); max-width: 20ch; margin-top: 18px; rotate: -2deg; animation-delay: .75s; }
   .hero .eyebrow { animation: rise 1s cubic-bezier(.2,.8,.2,1) both; }
   @keyframes rise { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: none; } }
   .scroll-cue { position: absolute; bottom: 26px; left: 50%; translate: -50% 0; font-family: var(--hand); font-size: 1.35rem; display: grid; justify-items: center; gap: 2px; animation: bob 1.8s ease-in-out infinite; }
@@ -213,6 +214,7 @@
     <span class="eyebrow">Un regalito virtual</span>
     <h1><span>Hola,</span><span>corazón.</span></h1>
     <p>Hice esta página solo para ti. Baja despacito, que hay sorpresa.</p>
+    <p class="wink">Te gustó un ingeniero, así que no puedes quejarte, jeje.</p>
   </div>
   <div class="scroll-cue" aria-hidden="true">por aquí
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15M5 13l7 7 7-7"/></svg>
