@@ -120,6 +120,8 @@
   .answered .choices { display: none; }
   .answer { display: none; font-family: var(--hand); font-size: 2rem; line-height: 1.15; margin-top: 22px; color: var(--roof); }
   .answered .answer { display: block; animation: rise .8s both; }
+  .letter { margin: 26px auto 0; padding: 26px 24px; background: var(--cream); border: 2px solid var(--wine); border-radius: 22px; box-shadow: 0 6px 0 var(--wine); text-align: left; font-size: 1.6rem; line-height: 1.25; color: var(--wine); rotate: -1deg; display: grid; gap: 16px; }
+  .keep-going { margin-top: 30px; font-size: 1.5rem; animation: bob 1.8s ease-in-out infinite; }
 
   /* ---------- el regalo ---------- */
   .gift { display: none; text-align: center; padding-bottom: 60px; }
@@ -263,7 +265,15 @@
       <button class="btn yes" id="yes">Sí, quiero</button>
       <button class="btn no" id="no">No</button>
     </div>
-    <p class="answer" role="status">¡Sabía que dirías que sí!<br>Entonces esto es tuyo…</p>
+    <div class="answer" role="status">
+      <p class="answer-title">¡Sabía que dirías que sí!</p>
+      <div class="letter">
+        <p>Sé que no suelo ser tan detallista, y que el precio o costo de las cosas no era el problema.</p>
+        <p>Pero cuando amas a alguien, trabajas y te esfuerzas por ello, haces sacrificios, porque amor con amor se paga.</p>
+        <p>Sé que te gustará, y lo hago desde el fondo de mi corazón, con todo el amor del mundo que te tengo…</p>
+      </div>
+      <p class="keep-going">sigue bajando ↓</p>
+    </div>
   </section>
 
   <section class="gift wrap" id="regalo">
@@ -391,7 +401,6 @@
     ask.classList.add('answered');
     gift.classList.add('unlocked');
     confetti();
-    if (scroll) setTimeout(() => gift.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }), 1900);
   }
   yes.addEventListener('click', () => sayYes());
 
